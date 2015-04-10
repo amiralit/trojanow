@@ -21,12 +21,12 @@
     </dependency>
     <dependency>
     	<groupId>edu.trojanow</groupId>
-    	<artifactId>trojanowmodel</artifactId>
+    	<artifactId>trojanow-model</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>edu.trojanow</groupId>
-    	<artifactId>trojandataaccesss</artifactId>
+    	<artifactId>trojanow-dataaccess</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
