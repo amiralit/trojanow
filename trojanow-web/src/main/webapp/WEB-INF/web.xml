@@ -15,6 +15,12 @@
   	<description></description>
   	<servlet-class>edu.trojanow.trojanowweb.Profile</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>ProfileService</servlet-name>
+  	<display-name>ProfileService</display-name>
+  	<description></description>
+  	<servlet-class>edu.trojanow.trojanowweb.ProfileService</servlet-class>
+  </servlet>
   
   <servlet-mapping>
       <servlet-name>profile</servlet-name>
@@ -23,5 +29,9 @@
   <servlet-mapping>
   	<servlet-name>Profile</servlet-name>
   	<url-pattern>/Profile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ProfileService</servlet-name>
+  	<url-pattern>/ProfileService</url-pattern>
   </servlet-mapping>
 </web-app>
