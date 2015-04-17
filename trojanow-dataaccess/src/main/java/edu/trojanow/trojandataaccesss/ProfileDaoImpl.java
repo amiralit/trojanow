@@ -23,24 +23,15 @@ public class ProfileDaoImpl implements ProfileDao {
 	private static final DataSource DATA_SOURCE = DataSourceFactory.getDataSource();
 	
 	public enum Columns{
-		USERNAME, PASSWORD
+		FULLNAME, PASSWORD, EMAIL
 	}
 	
 	private final InsertQuery mInsertQuery = new InsertQuery(DATA_SOURCE);
-	
-	private final AuthenticateQuery mAuthenticateQuery = new AuthenticateQuery(DATA_SOURCE);
 
 	public void insert(final Profile pProfile) {
-		mInsertQuery.update(new Object[] {pProfile.getUsername(), pProfile.getPassword()});
+		mInsertQuery.update(new Object[] {pProfile.getFullname(), pProfile.getPassword(), pProfile.getEmail()});
 	}
 	
-	public boolean authenticate(Profile pProfile) {
-		final Collection<Integer> myCounts = mAuthenticateQuery.execute(pProfile);
-		
-		// TODO throw RuntimeException if myCounts.isEmpty();
-		
-		return myCounts.iterator().next() > 0;
-	}
 	
 	private static class InsertQuery extends SqlUpdate{
 		public InsertQuery(final DataSource pDataSource){
@@ -49,55 +40,19 @@ public class ProfileDaoImpl implements ProfileDao {
 			setDataSource(pDataSource);
 			
 			final String mySql = MessageFormat.format(
-					"INSERT INTO {0} ({1}, {2}) VALUES (?,?)",
+					"INSERT INTO {0} ({1}, {2}, {3}) VALUES (?,?,?)",
 					ProfileDaoImpl.TABLE_NAME, 
-					Columns.USERNAME.toString(),
-					Columns.PASSWORD.toString());
+					Columns.FULLNAME.toString(),
+					Columns.PASSWORD.toString(),
+					Columns.EMAIL.toString());
 			
 			setSql(mySql);
 			
-			declareParameter(new SqlParameter(Columns.USERNAME.toString(), Types.VARCHAR));
+			declareParameter(new SqlParameter(Columns.FULLNAME.toString(), Types.VARCHAR));
 			declareParameter(new SqlParameter(Columns.PASSWORD.toString(), Types.VARCHAR));
+			declareParameter(new SqlParameter(Columns.EMAIL.toString(), Types.VARCHAR));
 
 			compile();	
-		}
-	}
-	
-	private static class AuthenticateQuery extends SqlQuery<Integer>{
-		
-		private static final String COUNT = "COUNT";
-		
-		public AuthenticateQuery(final DataSource pDataSource){
-			super();
-			
-			setDataSource(pDataSource);
-			
-			final String mySql = MessageFormat.format("SELECT COUNT(*) AS {3} FROM {0} WHERE {1} = ? AND {2} = ?",
-					ProfileDaoImpl.TABLE_NAME,
-					Columns.USERNAME.toString(),
-					Columns.PASSWORD.toString(),
-					COUNT);
-			
-			setSql(mySql);
-			
-			declareParameter(new SqlParameter(Columns.USERNAME.toString(), Types.VARCHAR));
-			declareParameter(new SqlParameter(Columns.PASSWORD.toString(), Types.VARCHAR));
-
-			compile();					
-		}
-
-		@Override
-		protected RowMapper<Integer> newRowMapper(Object[] pParams, Map<?, ?> pContext) {
-			return new RowMapper<Integer>() {
-				public Integer mapRow(ResultSet pResultSet, int pRowNum)
-						throws SQLException {
-					return pResultSet.getInt(COUNT);
-				}
-			};
-		}
-		
-		public Collection<Integer> execute(final Profile pProfile){
-			return this.execute(new Object[]{pProfile.getUsername(), pProfile.getPassword()});
 		}
 	}
 }

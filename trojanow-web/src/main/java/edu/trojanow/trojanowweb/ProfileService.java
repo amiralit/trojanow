@@ -41,10 +41,12 @@ public class ProfileService extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try{
-			final String myUsername = request.getParameter("username");
+			
+			final String myFullname = request.getParameter("fullname");
 			final String myPassword = request.getParameter("password");
-		
-			mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myUsername, myPassword));
+			final String myEmail = request.getParameter("email");
+			
+			mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myFullname, myPassword, myEmail));
 			
 			response.getWriter().println(new JSONObject(Responses.PROFILE_INSERT_SUCCESS));
 		} catch (Exception e){

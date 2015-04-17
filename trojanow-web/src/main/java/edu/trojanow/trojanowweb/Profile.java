@@ -43,7 +43,7 @@ public class Profile extends HttpServlet {
 		final String myUsername = request.getParameter("username");
 		final String myPassword = request.getParameter("password");
 		
-		mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myUsername, myPassword));
+		//mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myUsername, myPassword));
 	}
 
 }

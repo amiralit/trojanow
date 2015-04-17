@@ -1,5 +1,6 @@
 package edu.trojanow.trojantest;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -11,6 +12,10 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.junit.Before;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import edu.trojanow.trojandataaccesss.DataSourceFactory;
 
 
 public abstract class TestSupport {
@@ -34,7 +39,7 @@ public abstract class TestSupport {
 
 	protected String doPost(final String pApi, final List<NameValuePair> mNameValuePairs){
 		UrlEncodedFormEntity myEntity = new UrlEncodedFormEntity(mNameValuePairs, Consts.UTF_8);
-		HttpPost myHttpPost = new HttpPost(MessageFormat.format("http://localhost:8080/trojanow-web/{0}", pApi));
+		HttpPost myHttpPost = new HttpPost(MessageFormat.format("http://localhost:8081/trojanweb/{0}", pApi));
 		myHttpPost.setEntity(myEntity);
 		
 		CloseableHttpClient myHttpClient = HttpClients.createDefault();
@@ -46,5 +51,19 @@ public abstract class TestSupport {
 		}
 		
 		return null;
+	}
+	
+	private static final JdbcTemplate JDBC_TEMPLATE = new JdbcTemplate(DataSourceFactory.getDataSource());
+	
+	@Before
+	public void truncateTables(){
+		for(final String myTableName : tables()){
+			final String myQuery = "DELETE FROM " + myTableName;
+			JDBC_TEMPLATE.execute(myQuery);
+		}
+	}
+	
+	public String[] tables(){
+		return new String[]{};
 	}
 }
