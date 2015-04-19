@@ -8,9 +8,13 @@ import edu.trojanow.trojanowmodel.Profile;
 
 public class ProfileDaoImplTest extends TestSupport{
 
+	private static final String TEST_EMAIL = "TEST_EMAIL";
 
-	
-	private static final Profile TEST_PROFILE = new Profile("TEST_FULLNAME", "TEST_PASSWORD", "TEST_EMAIL");
+	private static final String TEST_PASSWORD = "TEST_PASSWORD";
+
+	private static final String TEST_FULLNAME = "TEST_FULLNAME";
+
+	private static final Profile TEST_PROFILE = new Profile(TEST_FULLNAME, TEST_PASSWORD, TEST_EMAIL);
 	
 	private final ProfileDao mProfileDao = new ProfileDaoImpl();
 
@@ -21,6 +25,10 @@ public class ProfileDaoImplTest extends TestSupport{
 	
 	@Test
 	public void test() {		
+		assertFalse(mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
+		
 		mProfileDao.insert(TEST_PROFILE);
+		
+		assertTrue(mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
 	}
 }

@@ -39,7 +39,7 @@ public abstract class TestSupport {
 
 	protected String doPost(final String pApi, final List<NameValuePair> mNameValuePairs){
 		UrlEncodedFormEntity myEntity = new UrlEncodedFormEntity(mNameValuePairs, Consts.UTF_8);
-		HttpPost myHttpPost = new HttpPost(MessageFormat.format("http://localhost:8081/trojanweb/{0}", pApi));
+		HttpPost myHttpPost = new HttpPost(MessageFormat.format("http://localhost:8080/trojanweb/{0}", pApi));
 		myHttpPost.setEntity(myEntity);
 		
 		CloseableHttpClient myHttpClient = HttpClients.createDefault();

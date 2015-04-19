@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -27,11 +26,19 @@ public class ProfileDaoImpl implements ProfileDao {
 	}
 	
 	private final InsertQuery mInsertQuery = new InsertQuery(DATA_SOURCE);
+	
+	private final AuthenticateQuery mAuthenticateQuery = new AuthenticateQuery(DATA_SOURCE);
 
 	public void insert(final Profile pProfile) {
 		mInsertQuery.update(new Object[] {pProfile.getFullname(), pProfile.getPassword(), pProfile.getEmail()});
 	}
 	
+
+	public boolean Authenticate(String pEmail, String pPassword) {
+		final Integer myCount = mAuthenticateQuery.execute(new Object[]{pEmail, pPassword}).iterator().next();
+		
+		return myCount == 1;
+	}
 	
 	private static class InsertQuery extends SqlUpdate{
 		public InsertQuery(final DataSource pDataSource){
@@ -55,4 +62,42 @@ public class ProfileDaoImpl implements ProfileDao {
 			compile();	
 		}
 	}
+	
+	private static class AuthenticateQuery extends SqlQuery<Integer>{
+		
+		private static final String COUNT = "COUNT";
+		
+		public AuthenticateQuery(final DataSource pDataSource){
+			super();
+			
+			setDataSource(pDataSource);
+			
+			final String mySql = MessageFormat.format("SELECT COUNT(*) AS {0} FROM {1} WHERE {2} = ? AND {3} = ?", 
+					COUNT,
+					ProfileDaoImpl.TABLE_NAME,
+					Columns.EMAIL,
+					Columns.PASSWORD);
+			
+			setSql(mySql);
+			
+			declareParameter(new SqlParameter(Columns.EMAIL.toString(), Types.VARCHAR));
+			declareParameter(new SqlParameter(Columns.PASSWORD.toString(), Types.VARCHAR));
+			
+			compile();
+		}
+
+		@Override
+		protected RowMapper<Integer> newRowMapper(Object[] arg0, Map<?,?> arg1) {
+			return new RowMapper<Integer>() {
+
+				public Integer mapRow(ResultSet pResultSet, int pRowNum)
+						throws SQLException {
+					return pResultSet.getInt(COUNT);
+				}
+			};
+		}
+		
+	}
+
+
 }
