@@ -27,6 +27,12 @@
   	<description></description>
   	<servlet-class>edu.trojanow.trojanowweb.AuthenticateService</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>TweetService</servlet-name>
+  	<display-name>TweetService</display-name>
+  	<description></description>
+  	<servlet-class>edu.trojanow.trojanowweb.TweetService</servlet-class>
+  </servlet>
   
   <servlet-mapping>
       <servlet-name>profile</servlet-name>
@@ -43,5 +49,9 @@
   <servlet-mapping>
   	<servlet-name>AuthenticateService</servlet-name>
   	<url-pattern>/AuthenticateService</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>TweetService</servlet-name>
+  	<url-pattern>/TweetService</url-pattern>
   </servlet-mapping>
 </web-app>

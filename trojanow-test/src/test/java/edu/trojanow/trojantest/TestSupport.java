@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -46,6 +47,21 @@ public abstract class TestSupport {
 		
 		try {
 			return toString(myHttpClient.execute(myHttpPost).getEntity().getContent());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	protected String doGet(final String pApi, final List<NameValuePair> mNameValuePairs){
+		// UrlEncodedFormEntity myEntity = new UrlEncodedFormEntity(mNameValuePairs, Consts.UTF_8);
+		HttpGet myHttpGet = new HttpGet(MessageFormat.format("http://localhost:8080/trojanweb/{0}", pApi));
+
+		CloseableHttpClient myHttpClient = HttpClients.createDefault();
+		
+		try {
+			return toString(myHttpClient.execute(myHttpGet).getEntity().getContent());
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

@@ -14,7 +14,7 @@ public class ProfileDaoImplTest extends TestSupport{
 
 	private static final String TEST_FULLNAME = "TEST_FULLNAME";
 
-	private static final Profile TEST_PROFILE = new Profile(TEST_FULLNAME, TEST_PASSWORD, TEST_EMAIL);
+	public static final Profile TEST_PROFILE = new Profile(TEST_FULLNAME, TEST_PASSWORD, TEST_EMAIL);
 	
 	private final ProfileDao mProfileDao = new ProfileDaoImpl();
 
@@ -25,10 +25,10 @@ public class ProfileDaoImplTest extends TestSupport{
 	
 	@Test
 	public void test() {		
-		assertFalse(mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
+		assertEquals(-1, mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
 		
 		mProfileDao.insert(TEST_PROFILE);
 		
-		assertTrue(mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
+		assertNotEquals(-1, mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
 	}
 }

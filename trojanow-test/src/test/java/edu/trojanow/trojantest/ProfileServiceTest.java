@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import edu.trojanow.trojandataaccesss.ProfileDaoImpl;
 import edu.trojanow.trojanowmodel.IResponse;
+import edu.trojanow.trojanowmodel.Profile;
 import edu.trojanow.trojanowmodel.Responses;
 
 public class ProfileServiceTest extends TestSupport{
@@ -32,7 +33,7 @@ public class ProfileServiceTest extends TestSupport{
 		try {
 			
 			final String myFailureAuthenticationResponse = doPost("AuthenticateService", myNameValuePairList);
-			assertEquals(new JSONObject(myFailureAuthenticationResponse).get("status"), IResponse.Status.FAILURE.toString());
+			assertEquals(-1, new JSONObject(myFailureAuthenticationResponse).get("userId"));
 			
 			final String myRespone = doPost("ProfileService", myNameValuePairList);
 			
@@ -41,7 +42,7 @@ public class ProfileServiceTest extends TestSupport{
 			assertEquals(myResponseJsonObject.get("status"), IResponse.Status.SUCCESS.toString());
 			
 			final String mySuccessAuthenticationResponse = doPost("AuthenticateService", myNameValuePairList);
-			assertEquals(new JSONObject(mySuccessAuthenticationResponse).get("status"), IResponse.Status.SUCCESS.toString());
+			assertNotEquals(-1, new JSONObject(mySuccessAuthenticationResponse).get("userId"));
 		} catch (JSONException e) {
 			fail(e.getMessage());
 		}

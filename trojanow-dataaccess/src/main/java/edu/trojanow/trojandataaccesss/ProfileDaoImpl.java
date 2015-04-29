@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -22,7 +23,7 @@ public class ProfileDaoImpl implements ProfileDao {
 	private static final DataSource DATA_SOURCE = DataSourceFactory.getDataSource();
 	
 	public enum Columns{
-		FULLNAME, PASSWORD, EMAIL
+		FULLNAME, PASSWORD, EMAIL, USER_ID
 	}
 	
 	private final InsertQuery mInsertQuery = new InsertQuery(DATA_SOURCE);
@@ -33,11 +34,15 @@ public class ProfileDaoImpl implements ProfileDao {
 		mInsertQuery.update(new Object[] {pProfile.getFullname(), pProfile.getPassword(), pProfile.getEmail()});
 	}
 	
-
-	public boolean Authenticate(String pEmail, String pPassword) {
-		final Integer myCount = mAuthenticateQuery.execute(new Object[]{pEmail, pPassword}).iterator().next();
+	public long Authenticate(String pEmail, String pPassword) {
 		
-		return myCount == 1;
+		final Collection<Long> myResults = mAuthenticateQuery.execute(new Object[]{pEmail, pPassword});
+		
+		if (myResults.isEmpty()){
+			return -1;
+		}
+		
+		return myResults.iterator().next();
 	}
 	
 	private static class InsertQuery extends SqlUpdate{
@@ -63,17 +68,15 @@ public class ProfileDaoImpl implements ProfileDao {
 		}
 	}
 	
-	private static class AuthenticateQuery extends SqlQuery<Integer>{
-		
-		private static final String COUNT = "COUNT";
+	private static class AuthenticateQuery extends SqlQuery<Long>{
 		
 		public AuthenticateQuery(final DataSource pDataSource){
 			super();
 			
 			setDataSource(pDataSource);
 			
-			final String mySql = MessageFormat.format("SELECT COUNT(*) AS {0} FROM {1} WHERE {2} = ? AND {3} = ?", 
-					COUNT,
+			final String mySql = MessageFormat.format("SELECT {0} FROM {1} WHERE {2} = ? AND {3} = ?", 
+					Columns.USER_ID,
 					ProfileDaoImpl.TABLE_NAME,
 					Columns.EMAIL,
 					Columns.PASSWORD);
@@ -87,17 +90,14 @@ public class ProfileDaoImpl implements ProfileDao {
 		}
 
 		@Override
-		protected RowMapper<Integer> newRowMapper(Object[] arg0, Map<?,?> arg1) {
-			return new RowMapper<Integer>() {
+		protected RowMapper<Long> newRowMapper(Object[] arg0, Map<?,?> arg1) {
+			return new RowMapper<Long>() {
 
-				public Integer mapRow(ResultSet pResultSet, int pRowNum)
+				public Long mapRow(ResultSet pResultSet, int pRowNum)
 						throws SQLException {
-					return pResultSet.getInt(COUNT);
+					return pResultSet.getLong(Columns.USER_ID.toString());
 				}
 			};
-		}
-		
+		}	
 	}
-
-
 }

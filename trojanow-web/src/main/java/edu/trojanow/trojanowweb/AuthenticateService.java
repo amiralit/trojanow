@@ -43,10 +43,6 @@ public class AuthenticateService extends HttpServlet {
 		final String myPassword = request.getParameter("password");
 		final String myEmail = request.getParameter("email");
 		
-		if (mProfileDao.Authenticate(myEmail, myPassword)){
-			response.getWriter().println(new JSONObject(Responses.AUTHENTICATION_SUCCESS));
-		} else {
-			response.getWriter().println(new JSONObject(Responses.AUTHENTICATION_FAILURE));
-		}	
+		response.getWriter().println(new JSONObject(new edu.trojanow.trojanowmodel.Profile.UserId(mProfileDao.Authenticate(myEmail, myPassword))));
 	}
 }

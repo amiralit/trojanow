@@ -5,7 +5,9 @@ public enum Responses implements IResponse {
 	PROFILE_INSERT_SUCCESS(1, "Profile was saved successfully", Status.SUCCESS),
 	PROFILE_INSERT_FAILURE(2, "Unable to save Profile", Status.FAILURE),
 	AUTHENTICATION_SUCCESS(3, "User was authenticated successfull", Status.SUCCESS),
-	AUTHENTICATION_FAILURE(4, "Unable to authenticate user", Status.FAILURE)
+	AUTHENTICATION_FAILURE(4, "Unable to authenticate user", Status.FAILURE),
+	TWEET_INSERT_SUCCESS(5, "Tweet was saved successfully", Status.SUCCESS),
+	TWEET_INSERT_FAILURE(2, "Unable to save tweet", Status.FAILURE),
 	;
 	
 	private final long mCode;
