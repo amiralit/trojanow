@@ -40,17 +40,22 @@ public class ProfileService extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		JSONObject myReturnObject = null;
+		
 		try{
 			
 			final String myFullname = request.getParameter("fullname");
 			final String myPassword = request.getParameter("password");
 			final String myEmail = request.getParameter("email");
 			
-			mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myFullname, myPassword, myEmail));
+			final edu.trojanow.trojanowmodel.Profile myInsertedProfile = mProfileDao.insert(new edu.trojanow.trojanowmodel.Profile(myFullname, myPassword, myEmail));
 			
-			response.getWriter().println(new JSONObject(Responses.PROFILE_INSERT_SUCCESS));
+			myReturnObject = new JSONObject(new edu.trojanow.trojanowmodel.Profile.UserId(myInsertedProfile.getUserId()));
+			response.getWriter().println(myReturnObject.toString());
 		} catch (Exception e){
-			response.getWriter().println(new JSONObject(Responses.PROFILE_INSERT_FAILURE));
+			myReturnObject = new JSONObject(new edu.trojanow.trojanowmodel.Profile.UserId(-1));
+			response.getWriter().println(myReturnObject.toString());
 		}
 	}
 

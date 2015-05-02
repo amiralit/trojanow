@@ -27,7 +27,9 @@ public class ProfileDaoImplTest extends TestSupport{
 	public void test() {		
 		assertEquals(-1, mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
 		
-		mProfileDao.insert(TEST_PROFILE);
+		final Profile myInsertedProfile = mProfileDao.insert(TEST_PROFILE);
+		
+		assertTrue(myInsertedProfile.getUserId() > 0);
 		
 		assertNotEquals(-1, mProfileDao.Authenticate(TEST_EMAIL, TEST_PASSWORD));
 	}

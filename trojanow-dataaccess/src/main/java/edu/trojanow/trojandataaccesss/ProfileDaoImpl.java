@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlQuery;
 import org.springframework.jdbc.object.SqlUpdate;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.trojanow.trojanowmodel.Profile;
 
@@ -30,8 +31,18 @@ public class ProfileDaoImpl implements ProfileDao {
 	
 	private final AuthenticateQuery mAuthenticateQuery = new AuthenticateQuery(DATA_SOURCE);
 
-	public void insert(final Profile pProfile) {
+	@Transactional
+	public Profile insert(final Profile pProfile) {
 		mInsertQuery.update(new Object[] {pProfile.getFullname(), pProfile.getPassword(), pProfile.getEmail()});
+		
+		long myUserId = 0;
+		try {
+			myUserId = DATA_SOURCE.getConnection().createStatement().getGeneratedKeys().getLong(1);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return new Profile(pProfile.getFullname(), pProfile.getPassword(), pProfile.getEmail(), myUserId);
 	}
 	
 	public long Authenticate(String pEmail, String pPassword) {
